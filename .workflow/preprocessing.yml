@@ -1,0 +1,43 @@
+name: Otomatisasi Preprocessing Kriteria 1
+
+# 1. Kapan robot ini harus bekerja? (Trigger)
+on:
+  push:
+    branches:
+      - main  # Robot bekerja setiap kali ada perubahan di cabang utama (main)
+
+jobs:
+  build:
+    # 2. Komputer jenis apa yang akan dipinjam GitHub untuk bekerja?
+    runs-on: ubuntu-latest
+
+    steps:
+      # Langkah 1: Mengambil buku resep dan bahan baku dari repositori Anda
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Langkah 2: Menyiapkan Dapur (Menginstal Python sesuai syarat Dicoding)
+      - name: Setup Python 3.12.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.7'
+
+      # Langkah 3: Membeli peralatan masak tambahan
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas scikit-learn
+
+      # Langkah 4: Memulai proses memasak otomatis!
+      - name: Run Automate Script
+        run: |
+          python preprocessing/automate_Nama-siswa.py
+
+      # Langkah 5: Menyimpan hasil masakan (data bersih) kembali ke etalase repositori
+      - name: Commit and Push Clean Data
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add preprocessing/loan_dataset_preprocessing/
+          git commit -m "Auto-update data bersih via GitHub Actions" || echo "Tidak ada perubahan data"
+          git push
