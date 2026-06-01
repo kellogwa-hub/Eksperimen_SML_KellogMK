@@ -31,7 +31,7 @@ jobs:
       # Langkah 4: Memulai proses memasak otomatis!
       - name: Run Automate Script
         run: |
-          python preprocessing/automate_Nama-siswa.py
+          python preprocessing/automate_kellogmk.py
 
       # Langkah 5: Menyimpan hasil masakan (data bersih) kembali ke etalase repositori
       - name: Commit and Push Clean Data
