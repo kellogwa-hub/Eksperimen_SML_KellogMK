@@ -7,6 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1oh7dNG3rI0BtEY6hRMdeewUwSWXcOnrO
 """
 
+import os
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
@@ -14,27 +15,28 @@ def run_automation():
     # 1. Ambil data mentah
     df = pd.read_csv("loan_dataset_raw/loan_approval_dataset.csv")
 
-    # 2. Proses Pembersihan (Sesuai dengan Notebook Eksperimen)
-    # Bersihkan spasi bawaan pada nama kolom
+    # 2. Proses Pembersihan
     df.columns = df.columns.str.strip()
 
-    # Bersihkan spasi pada isi data teks
     categorical_cols = df.select_dtypes(include=['object']).columns
     for col in categorical_cols:
         df[col] = df[col].str.strip()
 
-    # Hapus kolom id karena tidak relevan untuk ML
     if 'loan_id' in df.columns:
         df = df.drop(columns=['loan_id'])
 
-    # Encoding variabel kategori menjadi angka
     le = LabelEncoder()
     for col in ['education', 'self_employed', 'loan_status']:
         df[col] = le.fit_transform(df[col])
 
-    # 3. Simpan hasil ke folder khusus (Pastikan foldernya sudah ada di lokal/GitHub)
-    # Perhatikan: Saya sudah memperbaiki nama foldernya menjadi loan_dataset_preprocessing
-    df.to_csv("preprocessing/loan_dataset_preprocessing/loan_clean.csv", index=False)
+    # --- PERBAIKAN DI SINI ---
+    # Membuat folder tujuan secara otomatis jika belum ada di server
+    output_dir = "preprocessing/loan_dataset_preprocessing"
+    os.makedirs(output_dir, exist_ok=True)
+    # -------------------------
+
+    # 3. Simpan hasil ke folder khusus
+    df.to_csv(f"{output_dir}/loan_clean.csv", index=False)
     print("Preprocessing Berhasil! Data siap dilatih.")
 
 if __name__ == "__main__":
